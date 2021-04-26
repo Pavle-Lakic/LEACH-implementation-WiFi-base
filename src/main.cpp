@@ -38,7 +38,11 @@ void wait_for_packet(void)
     Serial.println(packetBuffer);
 #endif
 
-    client.publish(TOPIC, packetBuffer);
+    IPAddress local = WiFi.localIP();
+    IPAddress send(local[0], local[1], local[2], 255);
+    Udp.beginPacket(send, 50000);
+    Udp.write(packetBuffer);
+    Udp.endPacket();
 
   }
 }
@@ -83,16 +87,21 @@ void setup() {
   Serial.begin(115200);
 #endif
 
-  client.setServer(mqtt_server, 1883);
+  //client.setServer(mqtt_server, 1883);
   WiFi.mode(WIFI_AP_STA);
   WiFi.begin(LOCAL_ROUTER_SSID, LOCAL_ROUTER_PASSWORD);
+
+    while(WiFi.status() != WL_CONNECTED) {
+        delay(500);
+    }
+
   WiFi.softAPConfig(IPAddress(apIP), IPAddress(apIP), subnet);
 
   WiFi.softAP(AP_SSID, AP_PASS, WIFI_CHANNEL, false, MAX_CONNECTED);
   
 #if DEBUG
-  Serial.print("AP IP address: ");
-  Serial.print(WiFi.softAPIP());
+  Serial.print("IP address: ");
+  Serial.print(WiFi.localIP());
   Serial.println();
 #endif
 
@@ -101,11 +110,7 @@ void setup() {
   //digitalWrite(LED_BUILTIN, HIGH);
 }
 void loop() {
-    if (!client.connected()) {
-        reconnect();
-    }
-    else {
-        wait_for_packet();
-    }
-    client.loop();
+
+    wait_for_packet();
+
 }
