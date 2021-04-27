@@ -7,7 +7,9 @@
  *  
  *  @author Pavle Lakic
  *  @bug For some reason base does WDT reset sometimes,
- * although yield() on each function call.
+ * although yield() on each function call. If any of stations
+ * send at aproximatly same UDP messages, base station might not
+ * receive it.
  */
 
 #include <Arduino.h>
