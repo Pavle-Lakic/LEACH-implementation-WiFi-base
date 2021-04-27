@@ -1,3 +1,15 @@
+/** @file base_functions.cpp
+ *  @brief
+ *  
+ *  This file represents LEACH implementation for base station.
+ *  Base station listens to UDP broadcast port for stations, and
+ *  sends it to local UDP port.
+ *  
+ *  @author Pavle Lakic
+ *  @bug For some reason base does WDT reset sometimes,
+ * although yield() on each function call.
+ */
+
 #include <Arduino.h>
 #include "includes.h"
 
@@ -18,6 +30,7 @@ char packetBuffer[UDP_TX_PACKET_MAX_SIZE + 1];
 String clientId = "BaseStation-";
 void wait_for_packet(void)
 {
+  yield();
   int packetSize = Udp.parsePacket();
 
   if (packetSize) {
