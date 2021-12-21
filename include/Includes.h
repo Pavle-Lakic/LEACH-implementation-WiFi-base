@@ -3,6 +3,7 @@
 #include <WiFiUdp.h>
 #include <PubSubClient.h>
 #include <Wire.h>
+#include <NTPClient.h>
 
 /** Set this flag to 1 if you want to see debug messages.*/
 #define DEBUG                       1
